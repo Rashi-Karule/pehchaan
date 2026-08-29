@@ -17,7 +17,7 @@ export const Header: React.FC = () => {
               </div>
               <div>
                 <div className="flex items-center space-x-1.5">
-                  <span className="font-extrabold tracking-wider text-slate-100 text-lg">TRUST-LENS</span>
+                  <span className="font-extrabold tracking-wider text-slate-100 text-lg">PEHCHAAN</span>
                   <span className="px-1.5 py-0.5 text-[10px] font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded">AI</span>
                 </div>
                 <div className="text-[10px] text-slate-400 font-mono tracking-wider uppercase">

@@ -40,7 +40,7 @@ init_db()
 # Pre-seed realistic sample data for testing
 seed_sample_data(UPLOADS_DIR)
 
-app = FastAPI(title="TRUST-LENS AI API", version="1.0.0")
+app = FastAPI(title="PEHCHAAN API", version="1.0.0")
 
 # CORS Middleware for Vite frontend
 app.add_middleware(
@@ -56,7 +56,7 @@ app.mount("/uploads", StaticFiles(directory=UPLOADS_DIR), name="uploads")
 
 @app.get("/api/health")
 def health_check():
-    return {"status": "online", "system": "TRUST-LENS AI", "timestamp": datetime.utcnow().isoformat()}
+    return {"status": "online", "system": "PEHCHAAN", "timestamp": datetime.utcnow().isoformat()}
 
 @app.post("/api/documents/upload", response_model=UploadResponse)
 async def upload_document(

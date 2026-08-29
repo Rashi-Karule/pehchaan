@@ -176,7 +176,7 @@ export const UploadPage: React.FC = () => {
               <div className="h-full bg-cyan-400 animate-pulse w-full rounded-full" />
             </div>
             <div className="text-[11px] font-mono text-slate-500">
-              TRUST-LENS AI Automated Border Forensics Engine
+              PEHCHAAN Automated Border Forensics Engine
             </div>
           </div>
         </div>

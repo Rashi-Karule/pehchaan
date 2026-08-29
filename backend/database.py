@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import create_engine, Column, String, DateTime, Text
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-DATABASE_URL = "sqlite:///./trust_lens.db"
+DATABASE_URL = "sqlite:///./pehchaan.db"
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

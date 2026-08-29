@@ -31,7 +31,7 @@ export const LandingPage: React.FC = () => {
 
           {/* Heading */}
           <h1 className="text-4xl sm:text-6xl font-black text-slate-100 tracking-tight leading-[1.15]">
-            TRUST-LENS <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">AI</span>
+            PEHCHAAN <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">AI</span>
           </h1>
           <p className="mt-4 text-lg sm:text-xl text-slate-300 font-medium leading-relaxed">
             Real-time identity document screening and forensic verification for border checkpoint officers.
@@ -112,7 +112,7 @@ export const LandingPage: React.FC = () => {
 
       {/* Terminal Footer Info */}
       <footer className="border-t border-slate-800 bg-slate-950/80 py-4 px-4 text-center text-xs font-mono text-slate-500">
-        TRUST-LENS AI Screening Console • ICAO Doc 9303 Compliant • Tactical Edition
+        PEHCHAAN Screening Console • ICAO Doc 9303 Compliant • Tactical Edition
       </footer>
     </div>
   );

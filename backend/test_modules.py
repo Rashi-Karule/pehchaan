@@ -10,7 +10,7 @@ from modules.face_verifier import face_engine
 from modules.risk_engine import evaluate_risk
 from models import MRZValidationResult, OCRExtractionResult, TamperingDetectionResult, FaceVerificationResult, ConsistencyCheck
 
-class TestTrustLensBackend(unittest.TestCase):
+class TestPehchaanBackend(unittest.TestCase):
     def test_icao_check_digit(self):
         # ICAO 9303 7-3-1 weighting test:
         # Example document number 'L898902C3'
