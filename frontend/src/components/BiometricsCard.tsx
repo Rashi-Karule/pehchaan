@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserCheck, UserX, ScanFace, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
+import { ScanFace } from 'lucide-react';
 import { FaceVerificationResult } from '../types';
 
 interface BiometricsCardProps {
@@ -10,7 +10,6 @@ export const BiometricsCard: React.FC<BiometricsCardProps> = ({ face }) => {
   const {
     selfie_provided,
     document_face_detected,
-    selfie_face_detected,
     match_score,
     cosine_similarity,
     is_match,
@@ -20,26 +19,26 @@ export const BiometricsCard: React.FC<BiometricsCardProps> = ({ face }) => {
   } = face;
 
   return (
-    <div className="bg-slate-900/80 rounded-xl border border-slate-800 p-5 shadow-xl">
+    <div className="bg-[#FFFFFF] dark:bg-[#1B2430] rounded-xl border border-[#D0D5CA] dark:border-[#2D3949] p-5 shadow-xs transition-colors duration-200">
       {/* Header */}
-      <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+      <div className="flex items-center justify-between pb-3 border-b border-[#D0D5CA] dark:border-[#2D3949]">
         <div className="flex items-center space-x-2">
-          <ScanFace className="w-5 h-5 text-cyan-400" />
-          <h3 className="font-bold text-slate-100 text-sm tracking-wide">
+          <ScanFace className="w-4 h-4 text-[#1B2430] dark:text-[#EAEBE3]" />
+          <h3 className="font-extrabold text-[#1B2430] dark:text-[#EAEBE3] text-sm">
             Biometric Face Verification
           </h3>
         </div>
         <div>
           {!selfie_provided ? (
-            <span className="px-2.5 py-0.5 text-xs font-mono font-bold rounded bg-slate-800 text-slate-400 border border-slate-700">
+            <span className="px-2.5 py-0.5 text-[10px] font-mono font-bold rounded bg-[#E2E4DC] dark:bg-[#181F28] text-[#526071] dark:text-[#9DA3A0] border border-[#D0D5CA] dark:border-[#2D3949]">
               NO SELFIE PROVIDED
             </span>
           ) : is_match ? (
-            <span className="px-2.5 py-0.5 text-xs font-mono font-bold rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+            <span className="px-2.5 py-0.5 text-[10px] font-mono font-bold rounded bg-[#FFFFFF] dark:bg-[#1B2430] text-[#3F4A2C] dark:text-[#6B7D46] border-2 border-[#3F4A2C] dark:border-[#6B7D46] uppercase">
               BIOMETRIC MATCH
             </span>
           ) : (
-            <span className="px-2.5 py-0.5 text-xs font-mono font-bold rounded bg-rose-500/20 text-rose-400 border border-rose-500/40">
+            <span className="px-2.5 py-0.5 text-[10px] font-mono font-bold rounded bg-[#FFFFFF] dark:bg-[#1B2430] text-[#A23B2E] dark:text-[#C24B3B] border-2 border-[#7A2A20] dark:border-[#9E3528] uppercase">
               FACE MISMATCH
             </span>
           )}
@@ -51,57 +50,57 @@ export const BiometricsCard: React.FC<BiometricsCardProps> = ({ face }) => {
         <div className="flex items-center justify-center space-x-4 w-full md:w-auto">
           {/* Document Extracted Face */}
           <div className="flex flex-col items-center">
-            <div className="w-24 h-28 rounded-lg overflow-hidden border-2 border-slate-700 bg-slate-950 flex items-center justify-center shadow-md">
+            <div className="w-24 h-28 rounded-md overflow-hidden border border-[#D0D5CA] dark:border-[#2D3949] bg-[#E2E4DC] dark:bg-[#181F28] p-1 flex items-center justify-center shadow-2xs">
               {document_face_url ? (
                 <img
                   src={document_face_url}
                   alt="Document Face"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover rounded"
                 />
               ) : (
-                <div className="text-center p-2 text-[10px] text-slate-500 font-mono">
-                  {document_face_detected ? 'Extracted' : 'No Face in Doc'}
+                <div className="text-center p-2 text-[9px] text-[#526071] dark:text-[#9DA3A0] font-mono">
+                  {document_face_detected ? 'Extracted' : 'No Face Detected'}
                 </div>
               )}
             </div>
-            <span className="mt-1.5 text-[11px] font-mono text-slate-400 uppercase font-semibold">
+            <span className="mt-1.5 text-[10px] font-mono text-[#526071] dark:text-[#9DA3A0] uppercase font-bold">
               ID Portrait
             </span>
           </div>
 
-          <div className="text-slate-600 font-mono text-xs font-black">VS</div>
+          <div className="text-[#526071] dark:text-[#9DA3A0] font-mono text-xs font-black">VS</div>
 
           {/* Traveler Live Selfie */}
           <div className="flex flex-col items-center">
-            <div className="w-24 h-28 rounded-lg overflow-hidden border-2 border-slate-700 bg-slate-950 flex items-center justify-center shadow-md">
+            <div className="w-24 h-28 rounded-md overflow-hidden border border-[#D0D5CA] dark:border-[#2D3949] bg-[#E2E4DC] dark:bg-[#181F28] p-1 flex items-center justify-center shadow-2xs">
               {selfie_face_url ? (
                 <img
                   src={selfie_face_url}
                   alt="Traveler Selfie"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover rounded"
                 />
               ) : (
-                <div className="text-center p-2 text-[10px] text-slate-500 font-mono">
-                  {selfie_provided ? 'Processing...' : 'No Traveler Selfie'}
+                <div className="text-center p-2 text-[9px] text-[#526071] dark:text-[#9DA3A0] font-mono">
+                  {selfie_provided ? 'Processing...' : 'No Live Selfie'}
                 </div>
               )}
             </div>
-            <span className="mt-1.5 text-[11px] font-mono text-slate-400 uppercase font-semibold">
+            <span className="mt-1.5 text-[10px] font-mono text-[#526071] dark:text-[#9DA3A0] uppercase font-bold">
               Live Traveler
             </span>
           </div>
         </div>
 
         {/* Match Statistics & Diagnostics */}
-        <div className="flex-1 w-full bg-slate-950/70 p-4 rounded-lg border border-slate-800/80">
+        <div className="flex-1 w-full bg-[#F4F5F0] dark:bg-[#222B38] p-4 rounded-lg border border-[#D0D5CA] dark:border-[#2D3949]">
           <div className="flex items-center justify-between">
-            <div className="text-xs font-mono text-slate-400 uppercase font-bold">
+            <div className="text-[10px] font-mono text-[#526071] dark:text-[#9DA3A0] uppercase font-bold">
               Deep Neural Match Score
             </div>
             {match_score !== null && match_score !== undefined && (
               <div
-                className={`text-lg font-mono font-black ${
-                  is_match ? 'text-emerald-400' : 'text-rose-400'
+                className={`text-base font-mono font-black ${
+                  is_match ? 'text-[#3F4A2C] dark:text-[#6B7D46]' : 'text-[#A23B2E] dark:text-[#C24B3B]'
                 }`}
               >
                 {match_score}%
@@ -110,23 +109,23 @@ export const BiometricsCard: React.FC<BiometricsCardProps> = ({ face }) => {
           </div>
 
           {match_score !== null && match_score !== undefined && (
-            <div className="w-full bg-slate-800 h-2 rounded-full mt-2 overflow-hidden">
+            <div className="w-full bg-[#E2E4DC] dark:bg-[#181F28] h-2 rounded-full mt-2 overflow-hidden border border-[#D0D5CA] dark:border-[#2D3949]">
               <div
                 className={`h-full rounded-full transition-all duration-700 ${
-                  is_match ? 'bg-gradient-to-r from-emerald-500 to-teal-400' : 'bg-rose-500'
+                  is_match ? 'bg-[#3F4A2C] dark:bg-[#6B7D46]' : 'bg-[#A23B2E] dark:bg-[#C24B3B]'
                 }`}
                 style={{ width: `${match_score}%` }}
               />
             </div>
           )}
 
-          <div className="mt-3 text-xs text-slate-300 font-mono leading-relaxed">
+          <div className="mt-3 text-xs text-[#1B2430] dark:text-[#EAEBE3] font-sans leading-relaxed">
             {details}
           </div>
 
           {cosine_similarity !== null && cosine_similarity !== undefined && (
-            <div className="mt-2 text-[10px] font-mono text-slate-500">
-              SFace 128D Embedding Cosine Similarity: <span className="text-slate-300">{cosine_similarity}</span>
+            <div className="mt-2 text-[10px] font-mono text-[#526071] dark:text-[#9DA3A0] pt-2 border-t border-[#D0D5CA] dark:border-[#2D3949]">
+              SFace 128D Embedding Cosine: <strong className="text-[#1B2430] dark:text-[#EAEBE3]">{cosine_similarity}</strong>
             </div>
           )}
         </div>

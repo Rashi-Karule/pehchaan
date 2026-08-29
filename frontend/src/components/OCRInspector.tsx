@@ -1,5 +1,5 @@
 import React from 'react';
-import { FileText, CheckCircle2, XCircle, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { FileText, CheckCircle2, XCircle } from 'lucide-react';
 import { OCRExtractionResult, ConsistencyCheck } from '../types';
 
 interface OCRInspectorProps {
@@ -18,29 +18,29 @@ export const OCRInspector: React.FC<OCRInspectorProps> = ({ ocr, consistency }) 
     const cons = fieldKey ? consistencyMap.get(fieldKey) : undefined;
 
     return (
-      <div className="p-3 rounded-lg bg-slate-950/60 border border-slate-800/80 flex flex-col justify-between">
+      <div className="p-3 rounded-lg bg-[#F4F5F0] dark:bg-[#222B38] border border-[#D0D5CA] dark:border-[#2D3949] flex flex-col justify-between transition-colors duration-200">
         <div className="flex items-center justify-between">
-          <span className="text-[10px] uppercase font-mono text-slate-400">{label}</span>
+          <span className="text-[10px] uppercase font-sans font-bold text-[#526071] dark:text-[#9DA3A0]">{label}</span>
           {cons && (
             <span
-              className={`inline-flex items-center space-x-1 text-[10px] px-1.5 py-0.2 rounded font-mono font-bold ${
+              className={`inline-flex items-center space-x-1 text-[9px] px-1.5 py-0.2 rounded font-mono font-bold uppercase border-2 ${
                 cons.status === 'MATCH'
-                  ? 'bg-emerald-500/20 text-emerald-400'
+                  ? 'bg-[#FFFFFF] dark:bg-[#1B2430] text-[#3F4A2C] dark:text-[#6B7D46] border-[#3F4A2C] dark:border-[#6B7D46]'
                   : cons.status === 'MISMATCH'
-                  ? 'bg-rose-500/20 text-rose-400'
-                  : 'bg-slate-800 text-slate-400'
+                  ? 'bg-[#FFFFFF] dark:bg-[#1B2430] text-[#A23B2E] dark:text-[#C24B3B] border-[#7A2A20] dark:border-[#9E3528]'
+                  : 'bg-[#E2E4DC] dark:bg-[#181F28] text-[#526071] dark:text-[#9DA3A0] border-[#D0D5CA] dark:border-[#2D3949]'
               }`}
               title={cons.details}
             >
               {cons.status === 'MATCH' && (
                 <>
-                  <CheckCircle2 className="w-2.5 h-2.5" />
+                  <CheckCircle2 className="w-2.5 h-2.5 text-[#3F4A2C] dark:text-[#6B7D46]" />
                   <span>VIZ-MRZ MATCH</span>
                 </>
               )}
               {cons.status === 'MISMATCH' && (
                 <>
-                  <XCircle className="w-2.5 h-2.5" />
+                  <XCircle className="w-2.5 h-2.5 text-[#A23B2E] dark:text-[#C24B3B]" />
                   <span>MISMATCH</span>
                 </>
               )}
@@ -48,11 +48,11 @@ export const OCRInspector: React.FC<OCRInspectorProps> = ({ ocr, consistency }) 
             </span>
           )}
         </div>
-        <div className="mt-1 text-sm font-bold font-mono text-slate-100 truncate">
-          {value || <span className="text-slate-500 italic font-normal">Not Detected</span>}
+        <div className="mt-1.5 text-sm font-mono font-bold text-[#1B2430] dark:text-[#EAEBE3] truncate">
+          {value || <span className="text-[#A0A796] dark:text-[#68717B] italic font-normal">Not Detected</span>}
         </div>
         {cons && cons.status === 'MISMATCH' && (
-          <div className="mt-1 text-[10px] text-rose-300/90 font-mono truncate">
+          <div className="mt-1 text-[10px] text-[#A23B2E] dark:text-[#C24B3B] font-mono truncate font-semibold">
             {cons.details}
           </div>
         )}
@@ -61,18 +61,18 @@ export const OCRInspector: React.FC<OCRInspectorProps> = ({ ocr, consistency }) 
   };
 
   return (
-    <div className="bg-slate-900/80 rounded-xl border border-slate-800 p-5 shadow-xl">
+    <div className="bg-[#FFFFFF] dark:bg-[#1B2430] rounded-xl border border-[#D0D5CA] dark:border-[#2D3949] p-5 shadow-xs transition-colors duration-200">
       {/* Header */}
-      <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+      <div className="flex items-center justify-between pb-3 border-b border-[#D0D5CA] dark:border-[#2D3949]">
         <div className="flex items-center space-x-2">
-          <FileText className="w-5 h-5 text-cyan-400" />
-          <h3 className="font-bold text-slate-100 text-sm tracking-wide">
+          <FileText className="w-4 h-4 text-[#1B2430] dark:text-[#EAEBE3]" />
+          <h3 className="font-extrabold text-[#1B2430] dark:text-[#EAEBE3] text-sm">
             OCR Extraction & Consistency
           </h3>
         </div>
-        <div className="flex items-center space-x-2">
-          <span className="text-[11px] font-mono text-slate-400">
-            CONFIDENCE: <strong className="text-cyan-400">{confidence_score}%</strong>
+        <div>
+          <span className="text-[11px] font-mono text-[#526071] dark:text-[#9DA3A0]">
+            CONFIDENCE: <strong className="text-[#1B2430] dark:text-[#EAEBE3]">{confidence_score}%</strong>
           </span>
         </div>
       </div>

@@ -5,16 +5,18 @@ import {
   FileText,
   User,
   Scan,
-  Sparkles,
   ArrowRight,
   ShieldCheck,
   AlertTriangle,
   X,
   FileCheck2,
-  Loader2
+  Loader2,
+  Bookmark,
+  CheckCircle2
 } from 'lucide-react';
 import { api } from '../services/api';
 import { DemoSample } from '../types';
+import { MRZDivider } from '../components/ui/MRZDivider';
 
 export const UploadPage: React.FC = () => {
   const navigate = useNavigate();
@@ -80,19 +82,19 @@ export const UploadPage: React.FC = () => {
     setError(null);
 
     try {
-      setAnalysisStep('Module 1/4: Running OCR Extraction & Text Segmentation...');
+      setAnalysisStep('MODULE 1/4: Running OCR Extraction & Text Segmentation...');
       await new Promise((r) => setTimeout(r, 350));
 
-      setAnalysisStep('Module 2/4: Validating ICAO 9303 MRZ Check Digits (7-3-1 Weighting)...');
+      setAnalysisStep('MODULE 2/4: Validating ICAO 9303 MRZ Check Digits (7-3-1 Weighting)...');
       await new Promise((r) => setTimeout(r, 350));
 
-      setAnalysisStep('Module 3/4: Forensic Error Level Analysis & Copy-Move Detection...');
+      setAnalysisStep('MODULE 3/4: Forensic Error Level Analysis & Copy-Move Detection...');
       await new Promise((r) => setTimeout(r, 350));
 
-      setAnalysisStep('Module 4/4: Deep Face Biometric Embeddings & Cosine Matching...');
+      setAnalysisStep('MODULE 4/4: Deep Face Biometric Embeddings & Cosine Matching...');
       const result = await api.analyzeDocument(docId);
 
-      setAnalysisStep('Screening Complete! Loading Case Cockpit...');
+      setAnalysisStep('Screening Complete! Loading Case Dossier...');
       await new Promise((r) => setTimeout(r, 200));
 
       navigate(`/analysis/${result.document_id}`);
@@ -105,7 +107,7 @@ export const UploadPage: React.FC = () => {
 
   const handleUploadAndAnalyze = async () => {
     if (!documentFile) {
-      setError('Please provide a document image (Passport, ID Card, Driver’s License).');
+      setError('Please provide a primary identity document image (Passport, ID Card).');
       return;
     }
 
@@ -123,7 +125,7 @@ export const UploadPage: React.FC = () => {
 
   const handleQuickLoadSample = async (sampleId: string) => {
     setIsAnalyzing(true);
-    setAnalysisStep(`Loading pre-configured case: ${sampleId}...`);
+    setAnalysisStep(`Loading pre-configured case dossier: ${sampleId}...`);
 
     try {
       const uploadRes = await api.loadDemoSample(sampleId);
@@ -135,48 +137,62 @@ export const UploadPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6 animate-page-reveal transition-colors duration-200">
       {/* Page Header */}
-      <div className="mb-6">
-        <div className="flex items-center space-x-2 text-xs font-mono text-cyan-400 uppercase tracking-wider mb-1">
-          <Scan className="w-4 h-4" />
-          <span>Checkpoint Ingestion Portal</span>
+      <div className="pb-4 border-b border-[#D0D5CA] dark:border-[#2D3949]">
+        <div className="flex items-center space-x-2 text-xs font-mono text-[#526071] dark:text-[#9DA3A0] uppercase tracking-wider mb-1">
+          <Scan className="w-3.5 h-3.5 text-[#1B2430] dark:text-[#EAEBE3]" />
+          <span>Checkpoint Ingestion Portal • Section 04</span>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-100">
+        <h1 className="text-2xl sm:text-3xl font-black text-[#1B2430] dark:text-[#EAEBE3]">
           Upload Identity Document for Screening
         </h1>
-        <p className="text-sm text-slate-400 mt-1">
-          Upload a primary identity document image and an optional traveler selfie for 4-module forensic verification.
+        <p className="text-sm text-[#526071] dark:text-[#9DA3A0] mt-1">
+          Submit a primary travel document image and an optional traveler selfie for automated 4-module forensic verification.
         </p>
       </div>
 
+      {/* Error Alert */}
       {error && (
-        <div className="mb-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-mono flex items-center justify-between">
-          <span>{error}</span>
-          <button onClick={() => setError(null)} className="text-rose-400 hover:text-rose-200">
+        <div className="p-4 rounded-lg bg-[#FFFFFF] dark:bg-[#1B2430] border-2 border-[#A23B2E] dark:border-[#C24B3B] text-[#A23B2E] dark:text-[#C24B3B] text-xs font-mono flex items-center justify-between shadow-xs">
+          <div className="flex items-center space-x-2">
+            <AlertTriangle className="w-4 h-4 shrink-0 text-[#A23B2E] dark:text-[#C24B3B]" />
+            <span className="font-bold">{error}</span>
+          </div>
+          <button onClick={() => setError(null)} className="text-[#A23B2E] dark:text-[#C24B3B] hover:opacity-75 cursor-pointer">
             <X className="w-4 h-4" />
           </button>
         </div>
       )}
 
-      {/* Analysis Progress HUD Modal Overlay */}
+      {/* Analysis Progress Official Modal Overlay */}
       {isAnalyzing && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-slate-900 border border-cyan-500/40 rounded-2xl p-6 shadow-2xl text-center space-y-4">
-            <div className="w-16 h-16 rounded-full bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center mx-auto text-cyan-400">
-              <Loader2 className="w-8 h-8 animate-spin" />
+        <div className="fixed inset-0 z-50 bg-[#1B2430]/70 dark:bg-[#000000]/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-[#FFFFFF] dark:bg-[#1B2430] border-2 border-[#1B2430] dark:border-[#EAEBE3] rounded-xl p-6 shadow-xl text-center space-y-4">
+            <div className="w-14 h-14 rounded-full bg-[#EAEBE3] dark:bg-[#14161C] border border-[#D0D5CA] dark:border-[#2D3949] flex items-center justify-center mx-auto text-[#1B2430] dark:text-[#EAEBE3]">
+              <Loader2 className="w-7 h-7 animate-spin text-[#1B2430] dark:text-[#EAEBE3]" />
             </div>
-            <h3 className="text-lg font-bold text-slate-100">
-              Screening Document
-            </h3>
-            <p className="text-xs font-mono text-cyan-400 min-h-[36px] flex items-center justify-center">
-              {analysisStep}
-            </p>
-            <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-              <div className="h-full bg-cyan-400 animate-pulse w-full rounded-full" />
+            <div className="space-y-1">
+              <div className="text-[10px] font-mono font-bold uppercase text-[#526071] dark:text-[#9DA3A0] tracking-wider">
+                Official Border Screening in Progress
+              </div>
+              <h3 className="text-lg font-black text-[#1B2430] dark:text-[#EAEBE3]">
+                Processing Identity Dossier
+              </h3>
             </div>
-            <div className="text-[11px] font-mono text-slate-500">
-              PEHCHAAN Automated Border Forensics Engine
+            
+            <div className="p-3 bg-[#E2E4DC] dark:bg-[#181F28] rounded-lg border border-[#D0D5CA] dark:border-[#2D3949] min-h-[44px] flex items-center justify-center">
+              <p className="text-xs font-mono text-[#1B2430] dark:text-[#EAEBE3] font-semibold">
+                {analysisStep}
+              </p>
+            </div>
+
+            <div className="w-full bg-[#EAEBE3] dark:bg-[#14161C] h-2 rounded-full overflow-hidden border border-[#D0D5CA] dark:border-[#2D3949]">
+              <div className="h-full bg-[#1B2430] dark:bg-[#EAEBE3] w-full rounded-full animate-pulse" />
+            </div>
+
+            <div className="text-[10px] font-mono text-[#526071] dark:text-[#9DA3A0]">
+              PEHCHAAN Automated Border Forensics Engine • Station Alpha-01
             </div>
           </div>
         </div>
@@ -186,18 +202,18 @@ export const UploadPage: React.FC = () => {
         {/* Left: Drag & Drop Dropzones (7 Cols) */}
         <div className="lg:col-span-7 space-y-5">
           {/* 1. Document Drag-Drop Zone (Mandatory) */}
-          <div>
-            <label className="block text-xs font-mono text-slate-300 font-bold uppercase mb-2">
-              1. Primary Identity Document (Passport / ID Card) <span className="text-rose-400">*</span>
+          <div className="bg-[#FFFFFF] dark:bg-[#1B2430] p-5 rounded-xl border border-[#D0D5CA] dark:border-[#2D3949] shadow-xs">
+            <label className="block text-xs font-mono text-[#1B2430] dark:text-[#EAEBE3] font-bold uppercase mb-2">
+              1. Primary Identity Document (Passport / ID Card) <span className="text-[#A23B2E] dark:text-[#C24B3B]">*</span>
             </label>
             <div
               onDragOver={(e) => e.preventDefault()}
               onDrop={handleDropDoc}
               onClick={() => docInputRef.current?.click()}
-              className={`relative border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
+              className={`relative border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all ${
                 docPreview
-                  ? 'border-cyan-500/50 bg-slate-900/90'
-                  : 'border-slate-700 hover:border-cyan-500/40 bg-slate-900/40 hover:bg-slate-900/60'
+                  ? 'border-[#1B2430] dark:border-[#EAEBE3] bg-[#F4F5F0] dark:bg-[#222B38]'
+                  : 'border-[#D0D5CA] dark:border-[#2D3949] hover:border-[#1B2430] dark:hover:border-[#EAEBE3] bg-[#EAEBE3]/40 dark:bg-[#14161C]/40 hover:bg-[#EAEBE3] dark:hover:bg-[#14161C]'
               }`}
             >
               <input
@@ -210,35 +226,35 @@ export const UploadPage: React.FC = () => {
 
               {docPreview ? (
                 <div className="flex flex-col items-center space-y-3">
-                  <div className="relative max-h-56 rounded-lg overflow-hidden border border-slate-700 bg-slate-950">
+                  <div className="relative max-h-56 rounded-md overflow-hidden border border-[#D0D5CA] dark:border-[#2D3949] bg-[#E2E4DC] dark:bg-[#181F28] p-1 shadow-xs">
                     <img
                       src={docPreview}
                       alt="Document Preview"
                       className="max-h-52 object-contain"
                     />
                   </div>
-                  <div className="flex items-center space-x-2 text-xs font-mono text-emerald-400">
-                    <FileCheck2 className="w-4 h-4" />
+                  <div className="flex items-center space-x-2 text-xs font-mono text-[#3F4A2C] dark:text-[#6B7D46] font-bold">
+                    <FileCheck2 className="w-4 h-4 text-[#3F4A2C] dark:text-[#6B7D46]" />
                     <span>{documentFile?.name || 'Document Loaded'}</span>
                   </div>
-                  <span className="text-[10px] text-slate-500 font-mono">
+                  <span className="text-[10px] text-[#526071] dark:text-[#9DA3A0] font-mono">
                     Click or drag new image to replace
                   </span>
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-6 space-y-3">
-                  <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-cyan-400">
+                  <div className="w-12 h-12 rounded-lg bg-[#E2E4DC] dark:bg-[#181F28] border border-[#D0D5CA] dark:border-[#2D3949] flex items-center justify-center text-[#1B2430] dark:text-[#EAEBE3]">
                     <FileText className="w-6 h-6" />
                   </div>
                   <div>
-                    <span className="text-sm font-bold text-slate-200">
+                    <span className="text-sm font-bold text-[#1B2430] dark:text-[#EAEBE3]">
                       Drag & Drop Document Image
                     </span>
-                    <span className="block text-xs text-slate-400 mt-0.5">
-                      or click to browse from your device
+                    <span className="block text-xs text-[#526071] dark:text-[#9DA3A0] mt-0.5">
+                      or click to browse from local workstation
                     </span>
                   </div>
-                  <span className="text-[10px] font-mono text-slate-500 uppercase">
+                  <span className="text-[10px] font-mono text-[#526071] dark:text-[#9DA3A0] uppercase">
                     Supported: JPG, PNG, WEBP (ICAO 9303 Passports, National IDs)
                   </span>
                 </div>
@@ -247,12 +263,12 @@ export const UploadPage: React.FC = () => {
           </div>
 
           {/* 2. Optional Traveler Selfie Drag-Drop Zone */}
-          <div>
+          <div className="bg-[#FFFFFF] dark:bg-[#1B2430] p-5 rounded-xl border border-[#D0D5CA] dark:border-[#2D3949] shadow-xs">
             <div className="flex items-center justify-between mb-2">
-              <label className="text-xs font-mono text-slate-300 font-bold uppercase">
+              <label className="text-xs font-mono text-[#1B2430] dark:text-[#EAEBE3] font-bold uppercase">
                 2. Live Traveler Selfie (Optional Biometric Check)
               </label>
-              <span className="text-[10px] font-mono text-slate-500 uppercase">
+              <span className="text-[10px] font-mono text-[#526071] dark:text-[#9DA3A0] uppercase">
                 Module 4 Face Verification
               </span>
             </div>
@@ -261,10 +277,10 @@ export const UploadPage: React.FC = () => {
               onDragOver={(e) => e.preventDefault()}
               onDrop={handleDropSelfie}
               onClick={() => selfieInputRef.current?.click()}
-              className={`relative border-2 border-dashed rounded-xl p-5 text-center cursor-pointer transition-all ${
+              className={`relative border-2 border-dashed rounded-lg p-5 text-center cursor-pointer transition-all ${
                 selfiePreview
-                  ? 'border-blue-500/50 bg-slate-900/90'
-                  : 'border-slate-800 hover:border-blue-500/40 bg-slate-900/30 hover:bg-slate-900/50'
+                  ? 'border-[#1B2430] dark:border-[#EAEBE3] bg-[#F4F5F0] dark:bg-[#222B38]'
+                  : 'border-[#D0D5CA] dark:border-[#2D3949] hover:border-[#1B2430] dark:hover:border-[#EAEBE3] bg-[#EAEBE3]/40 dark:bg-[#14161C]/40 hover:bg-[#EAEBE3] dark:hover:bg-[#14161C]'
               }`}
             >
               <input
@@ -277,19 +293,19 @@ export const UploadPage: React.FC = () => {
 
               {selfiePreview ? (
                 <div className="flex items-center justify-center space-x-4">
-                  <div className="w-20 h-24 rounded-lg overflow-hidden border border-slate-700 bg-slate-950">
+                  <div className="w-20 h-24 rounded-md overflow-hidden border border-[#D0D5CA] dark:border-[#2D3949] bg-[#E2E4DC] dark:bg-[#181F28] p-1 shadow-xs">
                     <img
                       src={selfiePreview}
                       alt="Selfie Preview"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover rounded"
                     />
                   </div>
                   <div className="text-left">
-                    <div className="flex items-center space-x-1.5 text-xs font-mono text-blue-400 font-bold">
-                      <User className="w-4 h-4" />
+                    <div className="flex items-center space-x-1.5 text-xs font-mono text-[#1B2430] dark:text-[#EAEBE3] font-bold">
+                      <User className="w-4 h-4 text-[#526071] dark:text-[#9DA3A0]" />
                       <span>Traveler Selfie Ready</span>
                     </div>
-                    <span className="text-[11px] text-slate-400 block mt-0.5">
+                    <span className="text-[11px] text-[#526071] dark:text-[#9DA3A0] font-mono block mt-0.5">
                       {selfieFile?.name}
                     </span>
                     <button
@@ -298,15 +314,15 @@ export const UploadPage: React.FC = () => {
                         setSelfieFile(null);
                         setSelfiePreview(null);
                       }}
-                      className="mt-2 text-[10px] font-mono text-rose-400 hover:underline"
+                      className="mt-2 text-[10px] font-mono text-[#A23B2E] dark:text-[#C24B3B] hover:text-[#7A2A20] dark:hover:text-[#9E3528] hover:underline font-bold cursor-pointer"
                     >
                       Remove Selfie
                     </button>
                   </div>
                 </div>
               ) : (
-                <div className="flex items-center justify-center space-x-3 py-3 text-slate-400">
-                  <User className="w-5 h-5 text-slate-500" />
+                <div className="flex items-center justify-center space-x-3 py-3 text-[#526071] dark:text-[#9DA3A0]">
+                  <User className="w-5 h-5 text-[#526071] dark:text-[#9DA3A0]" />
                   <span className="text-xs font-medium">
                     Drag & drop live selfie photo or click to browse
                   </span>
@@ -315,73 +331,74 @@ export const UploadPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Screening Submission Button */}
+          {/* Primary Action Button — Accent #A23B2E Ink-Stamp Red */}
           <button
             onClick={handleUploadAndAnalyze}
             disabled={!documentFile || isAnalyzing}
-            className={`w-full py-4 rounded-xl font-black text-sm tracking-wider uppercase transition-all flex items-center justify-center space-x-2 shadow-xl ${
+            className={`w-full py-4 rounded-lg font-bold text-sm tracking-wide uppercase transition-all flex items-center justify-center space-x-2 shadow-xs cursor-pointer ${
               !documentFile || isAnalyzing
-                ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
-                : 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-cyan-500/20 hover:shadow-cyan-500/40 hover:scale-[1.01]'
+                ? 'bg-[#D0D5CA] dark:bg-[#2D3949] text-[#526071] dark:text-[#9DA3A0] cursor-not-allowed border border-[#B0B7A6] dark:border-[#3D4B5C]'
+                : 'bg-[#A23B2E] dark:bg-[#C24B3B] hover:bg-[#7A2A20] dark:hover:bg-[#9E3528] active:bg-[#7A2A20] text-[#FFFFFF] dark:text-[#14161C] shadow-sm'
             }`}
           >
-            <Scan className="w-5 h-5" />
+            <Scan className="w-4 h-4 text-[#FFFFFF] dark:text-[#14161C]" />
             <span>Execute 4-Module Document Screening</span>
           </button>
         </div>
 
         {/* Right: Quick Load Test Scenarios (5 Cols) */}
         <div className="lg:col-span-5 space-y-4">
-          <div className="p-5 rounded-xl bg-slate-900/80 border border-slate-800 shadow-xl">
-            <div className="flex items-center space-x-2 pb-3 border-b border-slate-800">
-              <Sparkles className="w-4 h-4 text-cyan-400" />
-              <h3 className="font-bold text-slate-100 text-sm">
-                Quick-Load Test Scenarios
+          <div className="p-5 rounded-xl bg-[#FFFFFF] dark:bg-[#1B2430] border border-[#D0D5CA] dark:border-[#2D3949] shadow-xs">
+            <div className="flex items-center space-x-2 pb-3 border-b border-[#D0D5CA] dark:border-[#2D3949]">
+              <Bookmark className="w-4 h-4 text-[#1B2430] dark:text-[#EAEBE3]" />
+              <h3 className="font-extrabold text-[#1B2430] dark:text-[#EAEBE3] text-sm">
+                Pre-Seeded Test Scenarios
               </h3>
             </div>
-            <p className="text-xs text-slate-400 mt-2">
-              Select one of the pre-configured test documents to evaluate all four screening modules instantly:
+            <p className="text-xs text-[#526071] dark:text-[#9DA3A0] mt-2">
+              Select an official reference scenario to test individual modules and inspection outcomes:
             </p>
 
             <div className="mt-4 space-y-3">
-              {demoSamples.map((sample) => (
-                <div
-                  key={sample.id}
-                  onClick={() => handleQuickLoadSample(sample.id)}
-                  className="p-3.5 rounded-lg bg-slate-950/70 border border-slate-800/90 hover:border-cyan-500/50 hover:bg-slate-950 cursor-pointer transition-all group"
-                >
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <span
-                        className={`text-[10px] font-mono font-bold uppercase px-1.5 py-0.2 rounded border ${
-                          sample.category === 'genuine'
-                            ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
-                            : sample.category === 'tampered'
-                            ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
-                            : sample.category === 'mrz_invalid'
-                            ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                            : 'bg-purple-500/20 text-purple-300 border-purple-500/40'
-                        }`}
-                      >
-                        {sample.category.replace('_', ' ')}
-                      </span>
-                      <h4 className="text-xs font-bold text-slate-100 mt-1 group-hover:text-cyan-400 transition-colors">
-                        {sample.title}
-                      </h4>
+              {demoSamples.map((sample) => {
+                let badgeClass = 'bg-[#E2E4DC] dark:bg-[#181F28] text-[#1B2430] dark:text-[#EAEBE3] border-[#D0D5CA] dark:border-[#2D3949]';
+                if (sample.category === 'genuine') {
+                  badgeClass = 'bg-[#FFFFFF] dark:bg-[#1B2430] text-[#3F4A2C] dark:text-[#6B7D46] border-2 border-[#3F4A2C] dark:border-[#6B7D46]';
+                } else if (sample.category === 'tampered' || sample.category === 'mrz_invalid' || sample.category === 'face_mismatch') {
+                  badgeClass = 'bg-[#FFFFFF] dark:bg-[#1B2430] text-[#A23B2E] dark:text-[#C24B3B] border-2 border-[#7A2A20] dark:border-[#9E3528] font-bold';
+                }
+
+                return (
+                  <div
+                    key={sample.id}
+                    onClick={() => handleQuickLoadSample(sample.id)}
+                    className="p-3.5 rounded-lg bg-[#F4F5F0] dark:bg-[#222B38] border border-[#D0D5CA] dark:border-[#2D3949] hover:border-[#1B2430] dark:hover:border-[#EAEBE3] hover:bg-[#FFFFFF] dark:hover:bg-[#1B2430] cursor-pointer transition-all group shadow-2xs"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <span
+                          className={`text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 rounded border ${badgeClass}`}
+                        >
+                          {sample.category.replace('_', ' ')}
+                        </span>
+                        <h4 className="text-xs font-bold text-[#1B2430] dark:text-[#EAEBE3] mt-1 group-hover:underline">
+                          {sample.title}
+                        </h4>
+                      </div>
+                      <ArrowRight className="w-4 h-4 text-[#526071] dark:text-[#9DA3A0] group-hover:text-[#1B2430] dark:group-hover:text-[#EAEBE3] group-hover:translate-x-0.5 transition-all mt-1" />
                     </div>
-                    <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-cyan-400 group-hover:translate-x-0.5 transition-all mt-1" />
-                  </div>
 
-                  <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
-                    {sample.description}
-                  </p>
+                    <p className="text-[11px] text-[#526071] dark:text-[#9DA3A0] mt-1 leading-relaxed">
+                      {sample.description}
+                    </p>
 
-                  <div className="mt-2 text-[10px] font-mono text-cyan-400/90 flex items-center space-x-1">
-                    <span>Expected:</span>
-                    <span className="text-slate-300">{sample.expected_outcome}</span>
+                    <div className="mt-2 text-[10px] font-mono text-[#1B2430] dark:text-[#EAEBE3] flex items-center space-x-1 pt-1.5 border-t border-[#D0D5CA]/60 dark:border-[#2D3949]">
+                      <span className="text-[#526071] dark:text-[#9DA3A0]">Expected:</span>
+                      <span className="font-bold truncate">{sample.expected_outcome}</span>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>

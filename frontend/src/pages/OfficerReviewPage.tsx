@@ -1,25 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import {
   ShieldCheck,
   ShieldAlert,
   AlertTriangle,
   CheckCircle2,
   XCircle,
-  FileCheck,
   ArrowLeft,
   Loader2,
-  Clock,
-  Send,
-  UserCheck,
-  Building2
+  Lock,
+  FileText
 } from 'lucide-react';
 import { api } from '../services/api';
 import { AnalysisResult } from '../types';
+import { MRZDivider } from '../components/ui/MRZDivider';
 
 export const OfficerReviewPage: React.FC = () => {
   const { caseId } = useParams<{ caseId: string }>();
-  const navigate = useNavigate();
 
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -89,21 +86,21 @@ export const OfficerReviewPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-4">
-        <Loader2 className="w-10 h-10 text-cyan-400 animate-spin" />
-        <p className="text-xs font-mono text-slate-400">Loading Officer Adjudication Portal...</p>
+      <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-4 animate-page-reveal">
+        <Loader2 className="w-8 h-8 text-[#1B2430] animate-spin" />
+        <p className="text-xs font-mono text-[#526071]">Loading Officer Adjudication Portal...</p>
       </div>
     );
   }
 
   if (error && !analysis) {
     return (
-      <div className="max-w-2xl mx-auto my-16 p-8 rounded-xl bg-slate-900 border border-slate-800 text-center space-y-4">
-        <h2 className="text-lg font-bold text-slate-100">Error Loading Case</h2>
-        <p className="text-xs text-slate-400 font-mono">{error}</p>
+      <div className="max-w-2xl mx-auto my-16 p-8 rounded-xl bg-[#FFFFFF] border-2 border-[#A23B2E] text-center space-y-4 shadow-xs animate-page-reveal">
+        <h2 className="text-lg font-black text-[#1B2430]">Error Loading Case</h2>
+        <p className="text-xs text-[#526071] font-mono">{error}</p>
         <Link
           to="/upload"
-          className="inline-flex items-center space-x-2 px-4 py-2 rounded-lg bg-slate-800 text-cyan-400 text-xs font-mono font-bold"
+          className="inline-flex items-center space-x-2 px-4 py-2 rounded-lg bg-[#1B2430] text-[#FFFFFF] text-xs font-mono font-bold"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Return to Upload</span>
@@ -113,7 +110,6 @@ export const OfficerReviewPage: React.FC = () => {
   }
 
   const {
-    created_at,
     preview_url,
     ocr,
     mrz,
@@ -124,129 +120,131 @@ export const OfficerReviewPage: React.FC = () => {
   } = analysis!;
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6 animate-page-reveal transition-colors duration-200">
       {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+      <div className="flex items-center justify-between pb-4 border-b border-[#D0D5CA] dark:border-[#2D3949]">
         <div>
           <Link
             to={`/analysis/${caseId}`}
-            className="inline-flex items-center space-x-1.5 text-xs font-mono text-cyan-400 hover:underline mb-1"
+            className="inline-flex items-center space-x-1.5 text-xs font-mono text-[#526071] dark:text-[#9DA3A0] hover:text-[#1B2430] dark:hover:text-[#EAEBE3] hover:underline mb-1"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back to Analysis Cockpit</span>
+            <span>Back to Analysis Dossier</span>
           </Link>
-          <h1 className="text-2xl font-black text-slate-100">
+          <h1 className="text-2xl sm:text-3xl font-black text-[#1B2430] dark:text-[#EAEBE3]">
             Border Officer Decision Portal
           </h1>
         </div>
 
         <div className="text-right">
-          <div className="text-[10px] font-mono text-slate-500 uppercase">Case Dossier</div>
-          <div className="text-xs font-mono text-slate-300 font-bold">{caseId?.slice(0, 13)}...</div>
+          <div className="text-[10px] font-mono text-[#526071] dark:text-[#9DA3A0] uppercase">Official Dossier</div>
+          <div className="text-xs font-mono text-[#1B2430] dark:text-[#EAEBE3] font-bold">{caseId?.slice(0, 13)}...</div>
         </div>
       </div>
 
       {successMessage && (
-        <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-mono flex items-center space-x-2">
-          <CheckCircle2 className="w-4 h-4 shrink-0" />
-          <span>{successMessage}</span>
+        <div className="p-4 rounded-lg bg-[#FFFFFF] dark:bg-[#1B2430] border-2 border-[#3F4A2C] dark:border-[#6B7D46] text-[#3F4A2C] dark:text-[#6B7D46] text-xs font-mono flex items-center space-x-2 shadow-2xs">
+          <CheckCircle2 className="w-4 h-4 shrink-0 text-[#3F4A2C] dark:text-[#6B7D46]" />
+          <span className="font-bold">{successMessage}</span>
         </div>
       )}
 
       {error && (
-        <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-mono flex items-center space-x-2">
-          <XCircle className="w-4 h-4 shrink-0" />
-          <span>{error}</span>
+        <div className="p-4 rounded-lg bg-[#FFFFFF] dark:bg-[#1B2430] border-2 border-[#A23B2E] dark:border-[#C24B3B] text-[#A23B2E] dark:text-[#C24B3B] text-xs font-mono flex items-center space-x-2 shadow-2xs">
+          <XCircle className="w-4 h-4 shrink-0 text-[#A23B2E] dark:text-[#C24B3B]" />
+          <span className="font-bold">{error}</span>
         </div>
       )}
 
       {/* Case Dossier Summary Card */}
-      <div className="bg-slate-900/80 rounded-xl border border-slate-800 p-5 shadow-xl grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div className="bg-[#FFFFFF] dark:bg-[#1B2430] rounded-xl border border-[#D0D5CA] dark:border-[#2D3949] p-5 shadow-xs grid grid-cols-1 md:grid-cols-3 gap-5 transition-colors duration-200">
         {/* Document Portrait / Preview */}
-        <div className="flex flex-col items-center justify-center p-3 bg-slate-950/60 rounded-lg border border-slate-800">
+        <div className="flex flex-col items-center justify-center p-3 bg-[#E2E4DC] dark:bg-[#181F28] rounded-lg border border-[#D0D5CA] dark:border-[#2D3949]">
           <img
             src={preview_url}
             alt="Document"
             className="max-h-36 rounded object-contain"
           />
-          <div className="mt-2 text-[10px] font-mono text-slate-400">
+          <div className="mt-2 text-[10px] font-mono text-[#526071] dark:text-[#9DA3A0] font-bold">
             {ocr.document_type || 'IDENTITY DOCUMENT'} • {ocr.issuing_country || 'UTO'}
           </div>
         </div>
 
         {/* Identity & Forensic Facts */}
         <div className="md:col-span-2 space-y-2.5 text-xs font-mono">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-800/80">
-            <span className="text-slate-400">TRAVELER:</span>
-            <span className="font-bold text-slate-100 text-sm">
+          <div className="flex items-center justify-between pb-2 border-b border-[#D0D5CA] dark:border-[#2D3949]">
+            <span className="text-[#526071] dark:text-[#9DA3A0] font-sans font-bold text-[11px]">TRAVELER:</span>
+            <span className="font-bold text-[#1B2430] dark:text-[#EAEBE3] text-sm">
               {ocr.name || mrz.surname ? `${mrz.surname || ''} ${mrz.given_names || ''}`.trim() : 'UNIDENTIFIED'}
             </span>
           </div>
 
           <div className="grid grid-cols-2 gap-2 text-[11px]">
             <div>
-              <span className="text-slate-500">DOCUMENT #: </span>
-              <span className="text-cyan-300 font-bold">{ocr.document_number || mrz.document_number || 'N/A'}</span>
+              <span className="text-[#526071] dark:text-[#9DA3A0]">DOCUMENT #: </span>
+              <span className="text-[#1B2430] dark:text-[#EAEBE3] font-bold">{ocr.document_number || mrz.document_number || 'N/A'}</span>
             </div>
             <div>
-              <span className="text-slate-500">DOB: </span>
-              <span className="text-slate-300">{ocr.date_of_birth || mrz.birth_date || 'N/A'}</span>
+              <span className="text-[#526071] dark:text-[#9DA3A0]">DOB: </span>
+              <span className="text-[#1B2430] dark:text-[#EAEBE3]">{ocr.date_of_birth || mrz.birth_date || 'N/A'}</span>
             </div>
             <div>
-              <span className="text-slate-500">ICAO MRZ: </span>
-              <span className={mrz.all_valid ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}>
+              <span className="text-[#526071] dark:text-[#9DA3A0]">ICAO MRZ: </span>
+              <span className={mrz.all_valid ? 'text-[#3F4A2C] dark:text-[#6B7D46] font-bold' : 'text-[#A23B2E] dark:text-[#C24B3B] font-bold'}>
                 {mrz.all_valid ? 'PASSED (7-3-1)' : 'CHECKSUM FAILED'}
               </span>
             </div>
             <div>
-              <span className="text-slate-500">FORENSICS: </span>
-              <span className={tampering.is_tampered ? 'text-rose-400 font-bold' : 'text-emerald-400'}>
+              <span className="text-[#526071] dark:text-[#9DA3A0]">FORENSICS: </span>
+              <span className={tampering.is_tampered ? 'text-[#A23B2E] dark:text-[#C24B3B] font-bold' : 'text-[#3F4A2C] dark:text-[#6B7D46] font-bold'}>
                 {tampering.tampering_score}% Tampering
               </span>
             </div>
             <div>
-              <span className="text-slate-500">BIOMETRICS: </span>
-              <span className={face_verification.is_match ? 'text-emerald-400' : 'text-slate-400'}>
+              <span className="text-[#526071] dark:text-[#9DA3A0]">BIOMETRICS: </span>
+              <span className={face_verification.is_match ? 'text-[#3F4A2C] dark:text-[#6B7D46] font-bold' : 'text-[#526071] dark:text-[#9DA3A0]'}>
                 {face_verification.match_score ? `${face_verification.match_score}% Match` : 'No Selfie'}
               </span>
             </div>
             <div>
-              <span className="text-slate-500">RECOMMENDED: </span>
-              <span className="text-amber-400 font-bold">{risk.recommendation}</span>
+              <span className="text-[#526071] dark:text-[#9DA3A0]">RECOMMENDED: </span>
+              <span className={risk.recommendation === 'CLEAR' ? 'text-[#3F4A2C] dark:text-[#6B7D46] font-bold' : 'text-[#A23B2E] dark:text-[#C24B3B] font-bold'}>
+                {risk.recommendation}
+              </span>
             </div>
           </div>
 
-          <div className="pt-2 text-[11px] text-slate-400 leading-relaxed bg-slate-950/40 p-2.5 rounded border border-slate-850">
+          <div className="pt-2 text-[11px] text-[#1B2430] dark:text-[#EAEBE3] font-sans leading-relaxed bg-[#F4F5F0] dark:bg-[#222B38] p-2.5 rounded border border-[#D0D5CA] dark:border-[#2D3949]">
             {risk.plain_english_explanation}
           </div>
         </div>
       </div>
 
       {/* Decision Adjudication Buttons */}
-      <div className="bg-slate-900/80 rounded-xl border border-slate-800 p-6 shadow-xl space-y-5">
+      <div className="bg-[#FFFFFF] dark:bg-[#1B2430] rounded-xl border border-[#D0D5CA] dark:border-[#2D3949] p-6 shadow-xs space-y-5 transition-colors duration-200">
         <div>
-          <h3 className="text-base font-bold text-slate-100">
-            Select Final Officer Decision
+          <h3 className="text-base font-extrabold text-[#1B2430] dark:text-[#EAEBE3]">
+            Record Official Officer Adjudication
           </h3>
-          <p className="text-xs text-slate-400 mt-0.5 font-mono">
-            Recorded in SQLite database with officer timestamp.
+          <p className="text-xs text-[#526071] dark:text-[#9DA3A0] mt-0.5 font-mono">
+            Recorded in SQLite border ledger with officer credential timestamp.
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {/* Button 1: CONFIRM / CLEAR */}
+          {/* Button 1: CONFIRM / CLEAR — Full-Strength Clearance Green */}
           <button
             onClick={() => handleDecisionSubmit('CONFIRMED')}
             disabled={submitting}
-            className={`p-5 rounded-xl border flex flex-col items-center justify-center text-center transition-all ${
+            className={`p-5 rounded-lg border-2 flex flex-col items-center justify-center text-center transition-all cursor-pointer shadow-xs ${
               decision === 'CONFIRMED'
-                ? 'bg-emerald-500/20 border-emerald-500 text-emerald-300 ring-2 ring-emerald-500/30'
-                : 'bg-slate-950/60 border-slate-800 hover:border-emerald-500/50 hover:bg-emerald-950/20 text-slate-300'
+                ? 'bg-[#3F4A2C] dark:bg-[#6B7D46] border-[#2A3320] dark:border-[#4F5D33] text-[#FFFFFF] dark:text-[#14161C] font-bold ring-2 ring-[#3F4A2C]/40 shadow-sm'
+                : 'bg-[#FFFFFF] dark:bg-[#1B2430] border-[#3F4A2C] dark:border-[#6B7D46] text-[#3F4A2C] dark:text-[#6B7D46] hover:bg-[#3F4A2C] hover:text-[#FFFFFF] dark:hover:bg-[#6B7D46] dark:hover:text-[#14161C] active:bg-[#2A3320] group'
             }`}
           >
-            <ShieldCheck className="w-8 h-8 text-emerald-400 mb-2" />
-            <span className="font-black text-sm uppercase tracking-wider">CONFIRM / CLEAR</span>
-            <span className="text-[10px] text-slate-400 font-mono mt-1">
+            <ShieldCheck className={`w-7 h-7 mb-2 ${decision === 'CONFIRMED' ? 'text-[#FFFFFF] dark:text-[#14161C]' : 'text-[#3F4A2C] dark:text-[#6B7D46] group-hover:text-[#FFFFFF] dark:group-hover:text-[#14161C]'}`} />
+            <span className="font-extrabold text-sm uppercase tracking-wider">CONFIRM / CLEAR</span>
+            <span className={`text-[10px] font-mono mt-1 ${decision === 'CONFIRMED' ? 'text-[#FFFFFF]/90 dark:text-[#14161C]/90' : 'text-[#526071] dark:text-[#9DA3A0] group-hover:text-[#FFFFFF]/90 dark:group-hover:text-[#14161C]/90'}`}>
               Valid document. Grant border crossing.
             </span>
           </button>
@@ -255,32 +253,32 @@ export const OfficerReviewPage: React.FC = () => {
           <button
             onClick={() => handleDecisionSubmit('FLAGGED')}
             disabled={submitting}
-            className={`p-5 rounded-xl border flex flex-col items-center justify-center text-center transition-all ${
+            className={`p-5 rounded-lg border-2 flex flex-col items-center justify-center text-center transition-all cursor-pointer shadow-xs ${
               decision === 'FLAGGED'
-                ? 'bg-amber-500/20 border-amber-500 text-amber-300 ring-2 ring-amber-500/30'
-                : 'bg-slate-950/60 border-slate-800 hover:border-amber-500/50 hover:bg-amber-950/20 text-slate-300'
+                ? 'bg-[#FFFFFF] dark:bg-[#1B2430] border-[#A23B2E] dark:border-[#C24B3B] text-[#A23B2E] dark:text-[#C24B3B] ring-2 ring-[#A23B2E]/30 font-bold'
+                : 'bg-[#FFFFFF] dark:bg-[#1B2430] border-[#D0D5CA] dark:border-[#2D3949] hover:border-[#A23B2E] dark:hover:border-[#C24B3B] text-[#1B2430] dark:text-[#EAEBE3] group'
             }`}
           >
-            <AlertTriangle className="w-8 h-8 text-amber-400 mb-2" />
-            <span className="font-black text-sm uppercase tracking-wider">FLAG / SECONDARY</span>
-            <span className="text-[10px] text-slate-400 font-mono mt-1">
+            <AlertTriangle className="w-7 h-7 text-[#A23B2E] dark:text-[#C24B3B] mb-2" />
+            <span className="font-extrabold text-sm uppercase tracking-wider">FLAG / SECONDARY</span>
+            <span className="text-[10px] text-[#526071] dark:text-[#9DA3A0] font-mono mt-1">
               Refer to secondary inspection room.
             </span>
           </button>
 
-          {/* Button 3: ESCALATE / DETENTION */}
+          {/* Button 3: ESCALATE / DETENTION — Primary Stamp Red */}
           <button
             onClick={() => handleDecisionSubmit('ESCALATED')}
             disabled={submitting}
-            className={`p-5 rounded-xl border flex flex-col items-center justify-center text-center transition-all ${
+            className={`p-5 rounded-lg border-2 flex flex-col items-center justify-center text-center transition-all cursor-pointer shadow-xs ${
               decision === 'ESCALATED'
-                ? 'bg-rose-500/20 border-rose-500 text-rose-300 ring-2 ring-rose-500/30'
-                : 'bg-slate-950/60 border-slate-800 hover:border-rose-500/50 hover:bg-rose-950/20 text-slate-300'
+                ? 'bg-[#A23B2E] dark:bg-[#C24B3B] border-[#7A2A20] dark:border-[#9E3528] text-[#FFFFFF] dark:text-[#14161C] ring-2 ring-[#7A2A20]/40 font-bold shadow-sm'
+                : 'bg-[#FFFFFF] dark:bg-[#1B2430] border-[#A23B2E] dark:border-[#C24B3B] text-[#A23B2E] dark:text-[#C24B3B] hover:bg-[#A23B2E] hover:text-[#FFFFFF] dark:hover:bg-[#C24B3B] dark:hover:text-[#14161C] active:bg-[#7A2A20] group'
             }`}
           >
-            <ShieldAlert className="w-8 h-8 text-rose-400 mb-2" />
-            <span className="font-black text-sm uppercase tracking-wider">ESCALATE / DETENTION</span>
-            <span className="text-[10px] text-slate-400 font-mono mt-1">
+            <ShieldAlert className={`w-7 h-7 mb-2 ${decision === 'ESCALATED' ? 'text-[#FFFFFF] dark:text-[#14161C]' : 'text-[#A23B2E] dark:text-[#C24B3B] group-hover:text-[#FFFFFF] dark:group-hover:text-[#14161C]'}`} />
+            <span className="font-extrabold text-sm uppercase tracking-wider">ESCALATE / DETENTION</span>
+            <span className={`text-[10px] font-mono mt-1 ${decision === 'ESCALATED' ? 'text-[#FFFFFF]/90 dark:text-[#14161C]/90' : 'text-[#526071] dark:text-[#9DA3A0] group-hover:text-[#FFFFFF]/90 dark:group-hover:text-[#14161C]/90'}`}>
               High fraud severity. Notify supervisor.
             </span>
           </button>
@@ -288,7 +286,7 @@ export const OfficerReviewPage: React.FC = () => {
 
         {/* Officer Notes Area */}
         <div className="pt-2">
-          <label className="block text-xs font-mono text-slate-300 font-bold uppercase mb-2">
+          <label className="block text-xs font-mono text-[#1B2430] dark:text-[#EAEBE3] font-bold uppercase mb-2">
             Officer Case Notes & Rationale:
           </label>
           <textarea
@@ -296,12 +294,12 @@ export const OfficerReviewPage: React.FC = () => {
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Add officer comments, inspection observations, or supervisor escalation details..."
-            className="w-full p-3 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-xs font-mono focus:outline-none focus:border-cyan-500 transition-colors"
+            className="w-full p-3 rounded-lg bg-[#F4F5F0] dark:bg-[#222B38] border border-[#D0D5CA] dark:border-[#2D3949] text-[#1B2430] dark:text-[#EAEBE3] placeholder:text-[#526071]/60 dark:placeholder:text-[#9DA3A0]/60 text-xs font-mono focus:outline-none focus:border-[#1B2430] dark:focus:border-[#EAEBE3] transition-colors"
           />
 
           {/* Quick presets */}
           <div className="mt-2 flex flex-wrap gap-1.5 items-center">
-            <span className="text-[10px] font-mono text-slate-500">Quick Tags:</span>
+            <span className="text-[10px] font-mono text-[#526071] dark:text-[#9DA3A0] font-bold">Quick Tags:</span>
             {[
               'Passed all checkpoint checks',
               'Altered ICAO 9303 checksum',
@@ -313,7 +311,7 @@ export const OfficerReviewPage: React.FC = () => {
                 key={i}
                 type="button"
                 onClick={() => handleQuickNote(tag)}
-                className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
+                className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#E2E4DC] dark:bg-[#181F28] hover:bg-[#1B2430] hover:text-[#FFFFFF] dark:hover:bg-[#EAEBE3] dark:hover:text-[#14161C] text-[#1B2430] dark:text-[#EAEBE3] border border-[#D0D5CA] dark:border-[#2D3949] transition-colors cursor-pointer"
               >
                 + {tag}
               </button>
@@ -323,8 +321,8 @@ export const OfficerReviewPage: React.FC = () => {
 
         {/* Audit Trail Info */}
         {officer_decision_at && (
-          <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono text-slate-500">
-            <span>AUDIT STATUS: RECORDED</span>
+          <div className="pt-3 border-t border-[#D0D5CA] dark:border-[#2D3949] flex items-center justify-between text-[10px] font-mono text-[#526071] dark:text-[#9DA3A0]">
+            <span className="font-bold text-[#1B2430] dark:text-[#EAEBE3]">AUDIT STATUS: RECORDED IN LEDGER</span>
             <span>DECISION TIME: {new Date(officer_decision_at).toLocaleString()}</span>
           </div>
         )}
