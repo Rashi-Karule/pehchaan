@@ -75,6 +75,19 @@ class RiskAssessment(BaseModel):
     plain_english_explanation: str
     risk_factors: List[str] = []
 
+class OfficerInfo(BaseModel):
+    id: str
+    username: str
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+class LoginResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    officer: OfficerInfo
+
 class AnalysisResult(BaseModel):
     case_id: str
     document_id: str
@@ -90,6 +103,12 @@ class AnalysisResult(BaseModel):
     review_status: str = "PENDING"  # "PENDING", "CONFIRMED", "FLAGGED", "ESCALATED"
     officer_notes: Optional[str] = None
     officer_decision_at: Optional[str] = None
+    screened_by_officer_id: Optional[str] = None
+    screened_by_officer_username: Optional[str] = None
+    reviewed_by_officer_id: Optional[str] = None
+    reviewed_by_officer_username: Optional[str] = None
+    screened_by: Optional[OfficerInfo] = None
+    reviewed_by: Optional[OfficerInfo] = None
 
 class UploadResponse(BaseModel):
     documentId: str
@@ -109,3 +128,15 @@ class ReviewResponse(BaseModel):
     review_status: str
     officer_notes: Optional[str] = None
     officer_decision_at: str
+    reviewed_by_officer_id: Optional[str] = None
+    reviewed_by_officer_username: Optional[str] = None
+
+class DemoSample(BaseModel):
+    id: str
+    title: str
+    category: str
+    description: str
+    document_filename: str
+    selfie_filename: Optional[str] = None
+    expected_outcome: str
+

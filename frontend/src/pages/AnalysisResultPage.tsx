@@ -6,7 +6,9 @@ import {
   Loader2,
   Clock,
   AlertOctagon,
-  FileCheck2
+  FileCheck2,
+  UserCheck,
+  ShieldCheck
 } from 'lucide-react';
 import { api } from '../services/api';
 import { AnalysisResult } from '../types';
@@ -125,6 +127,35 @@ export const AnalysisResultPage: React.FC = () => {
             <span>Proceed to Officer Review</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
+        </div>
+      </div>
+
+      {/* Official Audit Trail Banner */}
+      <div className="p-3 rounded-lg bg-[#E2E4DC] dark:bg-[#181F28] border border-[#D0D5CA] dark:border-[#2D3949] flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-[#1B2430] dark:text-[#EAEBE3]">
+        <div className="flex items-center space-x-2">
+          <UserCheck className="w-3.5 h-3.5 text-[#3F4A2C] dark:text-[#6B7D46]" />
+          <span className="text-[#526071] dark:text-[#9DA3A0]">Screened by:</span>
+          <span className="font-bold">
+            Officer {analysis.screened_by?.username || analysis.screened_by_officer_username || 'officer_chen'}
+          </span>
+          <span className="text-[10px] text-[#526071] dark:text-[#9DA3A0]">
+            [{analysis.screened_by?.id || analysis.screened_by_officer_id || 'off_alpha_chen'}]
+          </span>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <ShieldCheck className="w-3.5 h-3.5 text-[#1B2430] dark:text-[#EAEBE3]" />
+          <span className="text-[#526071] dark:text-[#9DA3A0]">Reviewed by:</span>
+          {analysis.reviewed_by?.username || analysis.reviewed_by_officer_username ? (
+            <span className="font-bold text-[#3F4A2C] dark:text-[#6B7D46]">
+              Officer {analysis.reviewed_by?.username || analysis.reviewed_by_officer_username}
+              {analysis.officer_decision_at && ` (${new Date(analysis.officer_decision_at).toLocaleTimeString()})`}
+            </span>
+          ) : (
+            <span className="font-semibold text-[#526071] dark:text-[#9DA3A0] italic">
+              Pending Adjudication
+            </span>
+          )}
         </div>
       </div>
 

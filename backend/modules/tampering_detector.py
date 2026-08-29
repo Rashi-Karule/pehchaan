@@ -203,7 +203,8 @@ def generate_tampering_heatmap(image_path: str, output_overlay_path: str) -> Tam
         details.append(f"No copy-move cloned regions detected (Score: {cm_score}/100).")
         
     heatmap_filename = os.path.basename(output_overlay_path)
-    heatmap_url = f"/uploads/{heatmap_filename}"
+    doc_id = heatmap_filename.replace("heatmap_", "").replace(".png", "")
+    heatmap_url = f"/api/documents/{doc_id}/heatmap"
     
     return TamperingDetectionResult(
         ela_score=ela_score,

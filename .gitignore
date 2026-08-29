@@ -1,7 +1,12 @@
 node_modules/
 .venv/
+venv/
 __pycache__/
+*.pyc
 *.db
-backend/uploads/
+backend/uploads/*
+!backend/uploads/.gitkeep
 .env
 dist/
+.DS_Store
+*.tsbuildinfo

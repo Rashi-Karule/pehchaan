@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { api } from '../services/api';
 import { AnalysisResult } from '../types';
+import { AuthImage } from '../components/ui/AuthImage';
 import { MRZDivider } from '../components/ui/MRZDivider';
 
 export const OfficerReviewPage: React.FC = () => {
@@ -55,7 +56,7 @@ export const OfficerReviewPage: React.FC = () => {
     setSuccessMessage(null);
 
     try {
-      const res = await api.submitReview(caseId, {
+      const res = await api.saveOfficerReview(caseId, {
         decision: selectedDecision,
         notes: notes.trim() || undefined,
       });
@@ -71,6 +72,8 @@ export const OfficerReviewPage: React.FC = () => {
           review_status: selectedDecision,
           officer_notes: notes,
           officer_decision_at: res.officer_decision_at,
+          reviewed_by_officer_id: res.reviewed_by_officer_id,
+          reviewed_by_officer_username: res.reviewed_by_officer_username,
         });
       }
     } catch (err: any) {
@@ -160,7 +163,7 @@ export const OfficerReviewPage: React.FC = () => {
       <div className="bg-[#FFFFFF] dark:bg-[#1B2430] rounded-xl border border-[#D0D5CA] dark:border-[#2D3949] p-5 shadow-xs grid grid-cols-1 md:grid-cols-3 gap-5 transition-colors duration-200">
         {/* Document Portrait / Preview */}
         <div className="flex flex-col items-center justify-center p-3 bg-[#E2E4DC] dark:bg-[#181F28] rounded-lg border border-[#D0D5CA] dark:border-[#2D3949]">
-          <img
+          <AuthImage
             src={preview_url}
             alt="Document"
             className="max-h-36 rounded object-contain"

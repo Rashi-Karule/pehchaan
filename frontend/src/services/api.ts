@@ -3,12 +3,74 @@ import {
   UploadResponse,
   ReviewRequest,
   ReviewResponse,
-  DemoSample
+  DemoSample,
+  LoginRequest,
+  LoginResponse,
+  OfficerInfo
 } from '../types';
 
 const API_BASE = '/api';
 
+let getToken: (() => string | null) | null = null;
+let onSessionExpiredCallback: ((msg: string) => void) | null = null;
+
+async function authFetch(input: RequestInfo | URL, init: RequestInit = {}): Promise<Response> {
+  const headers = new Headers(init.headers || {});
+
+  const token = getToken ? getToken() : null;
+  if (token && !headers.has('Authorization')) {
+    headers.set('Authorization', `Bearer ${token}`);
+  }
+
+  const res = await fetch(input, {
+    ...init,
+    headers,
+  });
+
+  // Check for 401 Unauthorized (unless this is the login endpoint itself)
+  const urlStr = typeof input === 'string' ? input : input.toString();
+  if (res.status === 401 && !urlStr.includes('/auth/login')) {
+    const errorData = await res.clone().json().catch(() => ({ detail: 'Officer session expired or unauthorized.' }));
+    if (onSessionExpiredCallback) {
+      onSessionExpiredCallback(errorData.detail || 'Officer session expired. Please log in again.');
+    }
+  }
+
+  return res;
+}
+
 export const api = {
+  setTokenGetter(getter: () => string | null) {
+    getToken = getter;
+  },
+
+  setOnSessionExpired(cb: (msg: string) => void) {
+    onSessionExpiredCallback = cb;
+  },
+
+  async login(credentials: LoginRequest): Promise<LoginResponse> {
+    const res = await fetch(`${API_BASE}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(credentials),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: 'Invalid officer credentials' }));
+      throw new Error(err.detail || 'Authentication failed');
+    }
+
+    return res.json();
+  },
+
+  async getOfficerMe(): Promise<OfficerInfo> {
+    const res = await authFetch(`${API_BASE}/auth/me`);
+    if (!res.ok) throw new Error('Failed to fetch officer identity');
+    return res.json();
+  },
+
   async healthCheck(): Promise<{ status: string; system: string }> {
     const res = await fetch(`${API_BASE}/health`);
     if (!res.ok) throw new Error('Health check failed');
@@ -22,7 +84,7 @@ export const api = {
       formData.append('selfie', selfieFile);
     }
 
-    const res = await fetch(`${API_BASE}/documents/upload`, {
+    const res = await authFetch(`${API_BASE}/documents/upload`, {
       method: 'POST',
       body: formData,
     });
@@ -36,7 +98,7 @@ export const api = {
   },
 
   async analyzeDocument(documentId: string): Promise<AnalysisResult> {
-    const res = await fetch(`${API_BASE}/documents/analyze`, {
+    const res = await authFetch(`${API_BASE}/documents/analyze`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -53,45 +115,58 @@ export const api = {
   },
 
   async getDocument(documentId: string): Promise<AnalysisResult> {
-    const res = await fetch(`${API_BASE}/documents/${documentId}`);
+    const res = await authFetch(`${API_BASE}/documents/${documentId}`);
     if (!res.ok) {
       const err = await res.json().catch(() => ({ detail: 'Document case not found' }));
       throw new Error(err.detail || 'Failed to fetch document');
     }
+
     return res.json();
   },
 
-  async submitReview(caseId: string, request: ReviewRequest): Promise<ReviewResponse> {
-    const res = await fetch(`${API_BASE}/review/${caseId}`, {
+  async saveOfficerReview(caseId: string, req: ReviewRequest): Promise<ReviewResponse> {
+    const res = await authFetch(`${API_BASE}/review/${caseId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(request),
+      body: JSON.stringify(req),
     });
 
     if (!res.ok) {
-      const err = await res.json().catch(() => ({ detail: 'Failed to submit review' }));
-      throw new Error(err.detail || 'Review submission failed');
+      const err = await res.json().catch(() => ({ detail: 'Failed to save review decision' }));
+      throw new Error(err.detail || 'Failed to save review');
     }
 
     return res.json();
   },
 
   async getDemoSamples(): Promise<DemoSample[]> {
-    const res = await fetch(`${API_BASE}/demo/samples`);
-    if (!res.ok) throw new Error('Failed to fetch demo samples');
+    const res = await authFetch(`${API_BASE}/demo/samples`);
+    if (!res.ok) {
+      throw new Error('Failed to load demo samples');
+    }
     return res.json();
   },
 
   async loadDemoSample(sampleId: string): Promise<UploadResponse> {
-    const res = await fetch(`${API_BASE}/demo/load/${sampleId}`, {
+    const res = await authFetch(`${API_BASE}/demo/load/${sampleId}`, {
       method: 'POST',
     });
+
     if (!res.ok) {
       const err = await res.json().catch(() => ({ detail: 'Failed to load demo sample' }));
-      throw new Error(err.detail || 'Demo sample load failed');
+      throw new Error(err.detail || 'Failed to load sample');
     }
+
     return res.json();
   },
+
+  async fetchMediaBlob(url: string): Promise<Blob> {
+    const res = await authFetch(url);
+    if (!res.ok) {
+      throw new Error(`Failed to load authenticated media: ${res.status}`);
+    }
+    return res.blob();
+  }
 };

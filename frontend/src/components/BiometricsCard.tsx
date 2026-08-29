@@ -2,6 +2,8 @@ import React from 'react';
 import { ScanFace } from 'lucide-react';
 import { FaceVerificationResult } from '../types';
 
+import { AuthImage } from './ui/AuthImage';
+
 interface BiometricsCardProps {
   face: FaceVerificationResult;
 }
@@ -52,9 +54,10 @@ export const BiometricsCard: React.FC<BiometricsCardProps> = ({ face }) => {
           <div className="flex flex-col items-center">
             <div className="w-24 h-28 rounded-md overflow-hidden border border-[#D0D5CA] dark:border-[#2D3949] bg-[#E2E4DC] dark:bg-[#181F28] p-1 flex items-center justify-center shadow-2xs">
               {document_face_url ? (
-                <img
+                <AuthImage
                   src={document_face_url}
                   alt="Document Face"
+                  fallbackText="No Face Crop"
                   className="w-full h-full object-cover rounded"
                 />
               ) : (
@@ -74,9 +77,10 @@ export const BiometricsCard: React.FC<BiometricsCardProps> = ({ face }) => {
           <div className="flex flex-col items-center">
             <div className="w-24 h-28 rounded-md overflow-hidden border border-[#D0D5CA] dark:border-[#2D3949] bg-[#E2E4DC] dark:bg-[#181F28] p-1 flex items-center justify-center shadow-2xs">
               {selfie_face_url ? (
-                <img
+                <AuthImage
                   src={selfie_face_url}
                   alt="Traveler Selfie"
+                  fallbackText="No Selfie Crop"
                   className="w-full h-full object-cover rounded"
                 />
               ) : (

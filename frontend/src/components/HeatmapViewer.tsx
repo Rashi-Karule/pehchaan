@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Layers, Eye } from 'lucide-react';
 import { TamperingDetectionResult } from '../types';
 
+import { AuthImage } from './ui/AuthImage';
+
 interface HeatmapViewerProps {
   previewUrl: string;
   tampering: TamperingDetectionResult;
@@ -101,7 +103,7 @@ export const HeatmapViewer: React.FC<HeatmapViewerProps> = ({ previewUrl, tamper
       {/* Layered Document Display */}
       <div className="relative rounded-lg overflow-hidden border border-[#D0D5CA] dark:border-[#2D3949] bg-[#E2E4DC] dark:bg-[#181F28] p-1 flex items-center justify-center min-h-[290px] max-h-[400px]">
         {/* Original Document Layer */}
-        <img
+        <AuthImage
           src={previewUrl}
           alt="Identity Document"
           className="w-full h-auto max-h-[380px] object-contain select-none rounded"
@@ -109,7 +111,7 @@ export const HeatmapViewer: React.FC<HeatmapViewerProps> = ({ previewUrl, tamper
 
         {/* Heatmap Overlay Layer with adjustable opacity */}
         {heatmap_url && (
-          <img
+          <AuthImage
             src={heatmap_url}
             alt="Forensic Heatmap Overlay"
             style={{ opacity: opacity / 100 }}

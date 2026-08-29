@@ -79,6 +79,22 @@ export interface RiskAssessment {
   risk_factors: string[];
 }
 
+export interface OfficerInfo {
+  id: string;
+  username: string;
+}
+
+export interface LoginRequest {
+  username: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  access_token: string;
+  token_type: string;
+  officer: OfficerInfo;
+}
+
 export interface AnalysisResult {
   case_id: string;
   document_id: string;
@@ -94,6 +110,12 @@ export interface AnalysisResult {
   review_status: 'PENDING' | 'CONFIRMED' | 'FLAGGED' | 'ESCALATED';
   officer_notes?: string | null;
   officer_decision_at?: string | null;
+  screened_by_officer_id?: string | null;
+  screened_by_officer_username?: string | null;
+  reviewed_by_officer_id?: string | null;
+  reviewed_by_officer_username?: string | null;
+  screened_by?: OfficerInfo | null;
+  reviewed_by?: OfficerInfo | null;
 }
 
 export interface UploadResponse {
@@ -117,6 +139,8 @@ export interface ReviewResponse {
   review_status: 'CONFIRMED' | 'FLAGGED' | 'ESCALATED';
   officer_notes?: string | null;
   officer_decision_at: string;
+  reviewed_by_officer_id?: string | null;
+  reviewed_by_officer_username?: string | null;
 }
 
 export interface DemoSample {
@@ -125,6 +149,6 @@ export interface DemoSample {
   category: 'genuine' | 'tampered' | 'mrz_invalid' | 'face_mismatch';
   description: string;
   document_filename: string;
-  selfie_filename?: string;
+  selfie_filename?: string | null;
   expected_outcome: string;
 }

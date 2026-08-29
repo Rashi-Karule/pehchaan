@@ -94,7 +94,7 @@ class FaceVerificationEngine:
                 doc_crop_name = f"doc_face_{case_id}.jpg"
                 doc_crop_path = os.path.join(uploads_dir, doc_crop_name)
                 cv2.imwrite(doc_crop_path, doc_crop)
-                doc_face_url = f"/uploads/{doc_crop_name}"
+                doc_face_url = f"/api/documents/{case_id}/document-face"
 
             return FaceVerificationResult(
                 selfie_provided=False,
@@ -133,14 +133,14 @@ class FaceVerificationEngine:
             doc_crop_name = f"doc_face_{case_id}.jpg"
             doc_crop_path = os.path.join(uploads_dir, doc_crop_name)
             cv2.imwrite(doc_crop_path, doc_crop)
-            doc_face_url = f"/uploads/{doc_crop_name}"
+            doc_face_url = f"/api/documents/{case_id}/document-face"
 
         if selfie_res is not None:
             _, _, selfie_crop = selfie_res
             selfie_crop_name = f"selfie_face_{case_id}.jpg"
             selfie_crop_path = os.path.join(uploads_dir, selfie_crop_name)
             cv2.imwrite(selfie_crop_path, selfie_crop)
-            selfie_face_url = f"/uploads/{selfie_crop_name}"
+            selfie_face_url = f"/api/documents/{case_id}/selfie-face"
 
         if doc_res is None or selfie_res is None:
             missing = []
