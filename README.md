@@ -1,5 +1,6 @@
 # PEHCHAAN (पहचान) — Automated Border Document Screening & Forensics
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-pehchaan--ruby.vercel.app-black?style=for-the-badge&logo=vercel)](https://pehchaan-ruby.vercel.app/login)
 [![Python Version](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![React](https://img.shields.io/badge/React-19.0+-61DAFB.svg?logo=react&logoColor=black)](https://react.dev/)
@@ -7,6 +8,9 @@
 [![TailwindCSS v4](https://img.shields.io/badge/TailwindCSS-v4-38B2AC.svg?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![ICAO 9303](https://img.shields.io/badge/Standard-ICAO%209303%20MRZ-green.svg)](https://www.icao.int/publications/pages/publication.aspx?docnum=9303)
 [![License](https://img.shields.io/badge/License-MIT-gray.svg)](LICENSE)
+
+> 🚀 **Live Production Deployment**: [https://pehchaan-ruby.vercel.app/login](https://pehchaan-ruby.vercel.app/login)  
+> **Demo Officer Credentials**: Username: `officer_chen` | Keycode: `Checkpoint2026!` *(Autofill button available on login)*
 
 **PEHCHAAN** is a specialized border-checkpoint identity document screening and forensic verification system designed for immigration officers and border enforcement personnel. It automates 4-module document forensics on international travel credentials (ICAO 9303 TD1/TD2/TD3 passports and national ID cards) with sub-second analysis, digital forgery detection, live biometric facial matching, and tamper-proof officer audit logging.
 

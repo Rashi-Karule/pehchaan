@@ -9,7 +9,8 @@ import {
   OfficerInfo
 } from '../types';
 
-const API_BASE = '/api';
+const BACKEND_ORIGIN = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/$/, '') : '';
+const API_BASE = BACKEND_ORIGIN ? `${BACKEND_ORIGIN}/api` : '/api';
 
 let getToken: (() => string | null) | null = null;
 let onSessionExpiredCallback: ((msg: string) => void) | null = null;
@@ -163,7 +164,8 @@ export const api = {
   },
 
   async fetchMediaBlob(url: string): Promise<Blob> {
-    const res = await authFetch(url);
+    const fullUrl = url.startsWith('/api') && BACKEND_ORIGIN ? `${BACKEND_ORIGIN}${url}` : url;
+    const res = await authFetch(fullUrl);
     if (!res.ok) {
       throw new Error(`Failed to load authenticated media: ${res.status}`);
     }
